@@ -1,0 +1,19 @@
+{
+ "_info": "Reel stílusok. bg: háttér, primary: kiemelés, secondary: panel, accent: második kiemelés, szoveg: alap szövegszín. style: a régi (Overlay) elemek panelstílusa: cizgi | blok | cam | editoryal | terminal. hatter: racs | foltok | sima. Az aetherpontis színei IDEIGLENESEK, amíg meg nem jön a márkakészlet.",
+ "aetherpontis": {
+  "bg": "#0E1726", "primary": "#3DD6C6", "secondary": "#1E2A3D", "accent": "#FFB547", "szoveg": "#FFFFFF", "halvany": "#B8C2D3",
+  "font": "Inter Display", "style": "blok", "hatter": "racs", "logo": "", "ideiglenes": true
+ },
+ "vilagos": {
+  "bg": "#F4F1EA", "primary": "#1F4BFF", "secondary": "#FFFFFF", "accent": "#FF5A36", "szoveg": "#111111", "halvany": "#4A4A4A",
+  "font": "Inter Display", "style": "blok", "hatter": "foltok", "logo": ""
+ },
+ "neon": {
+  "bg": "#0B0F0C", "primary": "#B6FF3B", "secondary": "#141A15", "accent": "#FF3BD4", "szoveg": "#F2F2F2", "halvany": "#9AA39C",
+  "font": "Inter Display", "style": "terminal", "hatter": "racs", "logo": ""
+ },
+ "editoryal": {
+  "bg": "#F3EBDD", "primary": "#C2410C", "secondary": "#FFFDF8", "accent": "#1D3557", "szoveg": "#1B1B1B", "halvany": "#5A5248",
+  "font": "Georgia, 'Times New Roman', serif", "style": "editoryal", "hatter": "sima", "logo": ""
+ }
+}

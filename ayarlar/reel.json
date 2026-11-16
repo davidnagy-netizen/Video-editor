@@ -1,0 +1,15 @@
+{
+ "_info": "Közös reel-beállítások. safe: Instagram biztonsági zóna 1080x1920 vásznon (px). A feed 4:5-ös kivágása kb. y=285 és y=1635 között látszik, alul a felirat/felhasználónév sáv, jobb oldalt a gombok takarnak.",
+ "width": 1080,
+ "height": 1920,
+ "fps": 30,
+ "safe": {"fent": 290, "lent": 450, "oldal": 80},
+ "zaro_szunet": 1.2,
+ "vagasi_tempo": {
+  "nyugodt": {"min": 4.0, "max": 6.0, "szo_max": 9},
+  "kozepes": {"min": 2.5, "max": 4.0, "szo_max": 6},
+  "gyors":   {"min": 1.5, "max": 2.5, "szo_max": 4}
+ },
+ "atfedes": 0.3,
+ "elore": 0.06
+}
