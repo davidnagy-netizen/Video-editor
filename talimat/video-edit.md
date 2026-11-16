@@ -5,7 +5,7 @@ Girdi: form.html'den gelen brief. Kullanıcı genellikle `materyaller/<video>/br
 ## Dört kural (her şeyden önemli)
 1. **Boş ekran yasak.** Çıktının hiçbir yerinde 3 saniyeden uzun değişmeyen görüntü ve kullanılmayan siyah alan olmaz. Ekran durağansa kadraj hareketi, vurgu ya da görsel eklenir.
 2. **Dikeyde ekranı sığdırma, kırp ve takip et.** Yatay ekran kaydını 9:16'ya sığdırıp altını boş bırakmak hatadır. Aşağıdaki "5D. Dikey çıktı" adımını uygula.
-3. **Sesli anlatımda kaynağın görüntüsü yok.** Brief'te `Tür: Sesli anlatım + görsel` yazıyorsa kaynaktaki görüntü (okunan metin, senaryo, boş ekran) gösterilmez, sadece ses kullanılır. Ekranı baştan sona sahneler doldurur: "5S. Sesli anlatım + görsel" adımını uygula, 5, 5D ve 6'yı atla. Oran (yatay, dikey, kare) fark etmez.
+3. **Sesli anlatımda kaynağın görüntüsü yok.** Brief'te `Tür: Sesli anlatım + görsel` (Macar brifte: `Típus: Hangalapú narráció + kép`) yazıyorsa kaynaktaki görüntü (okunan metin, senaryo, boş ekran) gösterilmez, sadece ses kullanılır. Ekranı baştan sona sahneler doldurur: "5S. Sesli anlatım + görsel" adımını uygula, 5, 5D ve 6'yı atla. Oran (yatay, dikey, kare) fark etmez.
 4. **Kapılar geçilmeden teslim yok.** `scripts/kontrol.mjs` hata verirse düzelt ve tekrar çalıştır. Kapıyı atlayamazsın.
 
 Hazır betikler var, ffmpeg filtresi veya yerleşim hesabını kendin yazma: `scripts/analiz.mjs`, `scripts/kontrol.mjs`, Remotion'daki `Overlay` ve `Dikey` sahneleri. Model küçükse önce `talimat/adim-adim.md` dosyasını oku.

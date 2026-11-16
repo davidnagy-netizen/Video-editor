@@ -4,6 +4,7 @@
   "private": true,
   "description": "Aetherpontis motion reel generátor (scriptből narrált motion graphic reel) az ai-video-edit-workflow alapján",
   "scripts": {
+    "start": "node server.mjs",
     "studio": "remotion studio src/index.ts",
     "tip": "tsc --noEmit",
     "katman": "remotion render src/index.ts Overlay out/katman.webm --props=katman.json --codec=vp8 --pixel-format=yuva420p --image-format=png",
@@ -28,5 +29,8 @@
   "devDependencies": {
     "@types/react": "18.3.12",
     "typescript": "5.6.3"
+  },
+  "allowScripts": {
+    "esbuild@0.28.1": true
   }
 }

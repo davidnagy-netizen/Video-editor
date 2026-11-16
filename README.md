@@ -2,7 +2,7 @@
 
 Scriptből narrált motion graphic reeleket készítő, helyben futó rendszer és Claude Code ágens az Aetherpontis számára.
 
-- **Bemenet:** egy szövegkönyv (script); minden más opcionális (hang, tempó, stílus, felirat). `npm run studio-reel` vagy Claude Code-ban `/reel <script>`.
+- **Bemenet:** egy szövegkönyv (script); minden más opcionális (hang, tempó, stílus, felirat). `npm start` (egy felület: Videó vágása / Reel scriptből fül) vagy Claude Code-ban `/reel <script>`.
 - **Két mód:** szöveges (kinetikus tipográfia) és sztori (rajzfilmes, vicces jelenetek, hangeffektekkel).
 - **Kimenet:** 1080×1920-as, 30 fps-es H.264 mp4, narrációval, a narrációhoz szóra pontosan időzített kinetikus tipográfiával, számlálókkal, felsorolásokkal, karaoke felirattal és záró CTA-val.
 - **Hang:** ElevenLabs (API-kulccsal) vagy ingyenes magyar Microsoft-hangok (edge-tts).

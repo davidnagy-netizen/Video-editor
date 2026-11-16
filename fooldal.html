@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aetherpontis Videó Stúdió</title>
+<style>
+  :root { --bg: #0b0c0f; --line: #262a33; --fg: #f2f0ea; --muted: #9b9da6; --chip: #1b1e25; --on: #ffc83d; --on-text: #1b1505; }
+  @media (prefers-color-scheme: light) {
+    :root { --bg: #f5f3ee; --line: #e1ddd3; --fg: #18160f; --muted: #6a665b; --chip: #ebe8e0; --on: #f5b400; --on-text: #1b1505; }
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body { background: var(--bg); color: var(--fg); font: 15px/1.4 -apple-system, "Segoe UI", Inter, sans-serif; display: flex; flex-direction: column; }
+  header { display: flex; align-items: center; gap: 16px; padding: 10px 16px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+  .nev { font-weight: 700; font-size: 15px; margin-right: auto; }
+  .nev span { color: var(--muted); font-weight: 400; }
+  [role="tablist"] { display: inline-flex; background: var(--chip); border-radius: 10px; padding: 4px; gap: 4px; }
+  [role="tab"] { border: 0; background: transparent; color: var(--muted); font: 600 14px/1 inherit; padding: 10px 16px; border-radius: 7px; cursor: pointer; }
+  [role="tab"][aria-selected="true"] { background: var(--on); color: var(--on-text); }
+  [role="tab"]:focus-visible { outline: 2px solid var(--on); outline-offset: 2px; }
+  main { flex: 1; position: relative; }
+  iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  iframe[hidden] { display: none; }
+</style>
+</head>
+<body>
+<header>
+  <div class="nev">Aetherpontis <span>Videó Stúdió</span></div>
+  <div role="tablist" aria-label="Mit csinálunk?">
+    <button role="tab" id="t-vago" aria-controls="vago" aria-selected="true">Videó vágása</button>
+    <button role="tab" id="t-reel" aria-controls="reel" aria-selected="false">Reel scriptből</button>
+  </div>
+</header>
+<main>
+  <!-- Mindkét felület betöltve marad, így fülváltáskor nem vész el, amit beírtál. -->
+  <iframe id="vago" src="/vago" title="Videó vágása"></iframe>
+  <iframe id="reel" src="/reel" title="Reel scriptből" hidden></iframe>
+</main>
+<script>
+const fulek = {vago: document.getElementById('t-vago'), reel: document.getElementById('t-reel')};
+function valt(nev) {
+  for (const [k, gomb] of Object.entries(fulek)) {
+    gomb.setAttribute('aria-selected', String(k === nev));
+    document.getElementById(k).hidden = k !== nev;
+  }
+  history.replaceState(null, '', '#' + nev);
+  try { localStorage.setItem('ful', nev); } catch (e) {}
+}
+fulek.vago.onclick = () => valt('vago');
+fulek.reel.onclick = () => valt('reel');
+let kezdo = location.hash.slice(1);
+if (!fulek[kezdo]) { try { kezdo = localStorage.getItem('ful'); } catch (e) {} }
+valt(fulek[kezdo] ? kezdo : 'vago');
+</script>
+</body>
+</html>

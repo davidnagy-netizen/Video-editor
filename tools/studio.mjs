@@ -6,6 +6,7 @@ import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 import {spawn, spawnSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
 
 const PORT = Number(process.env.STUDIO_PORT || 4545);
 const win = process.platform === 'win32';
@@ -75,10 +76,19 @@ function indit(o) {
   return id;
 }
 
-const srv = http.createServer(async (req, res) => {
+// Az összevont szerver (server.mjs) ezt hívja: true, ha a kérést a Reel Stúdió kezelte.
+// Feltételezi, hogy a munkakönyvtár a projekt gyökere.
+const UTAK = new Set(['/reel', '/api/info', '/api/start', '/api/allapot', '/video']);
+export async function studioKezelo(req, res) {
   const u = new URL(req.url, 'http://x');
+  if (!UTAK.has(u.pathname)) return false;
+  await kezel(req, res, u);
+  return true;
+}
+
+async function kezel(req, res, u) {
   try {
-    if (u.pathname === '/') { res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'}); return res.end(fs.readFileSync('tools/studio.html')); }
+    if (u.pathname === '/reel' || u.pathname === '/') { res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'}); return res.end(fs.readFileSync('tools/studio.html')); }
     if (u.pathname === '/api/info') {
       const hangok = JSON.parse(fs.readFileSync('ayarlar/hangok.json', 'utf8'));
       const stilusok = JSON.parse(fs.readFileSync('ayarlar/stilusok.json', 'utf8'));
@@ -113,9 +123,11 @@ const srv = http.createServer(async (req, res) => {
     }
     res.writeHead(404); res.end();
   } catch (e) { json(res, 500, {hiba: e.message}); }
-});
+}
 
-srv.listen(PORT, '127.0.0.1', () => {
+// Önálló indítás (npm run studio-reel): csak a Reel Stúdió, külön porton.
+const onallo = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+if (onallo) http.createServer((req, res) => kezel(req, res, new URL(req.url, 'http://x'))).listen(PORT, '127.0.0.1', () => {
   const url = `http://localhost:${PORT}`;
   console.log(`Reel Stúdió: ${url}  (leállítás: Ctrl+C)`);
   console.log(vanClaude ? 'Claude Code megtalálva: az ágens készíti a reeleket (szöveges és sztori mód).' : 'Claude Code nincs telepítve: csak a gépi, szöveges (tipo) reel érhető el.');

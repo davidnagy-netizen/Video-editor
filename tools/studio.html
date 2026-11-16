@@ -99,7 +99,7 @@ fetch('/api/info').then((r) => r.json()).then((d) => {
 $('go').onclick = async () => {
   const body = {script: $('script').value, mod: $('mod').value, hang: $('hang').value, tempo: $('tempo').value, beszedtempo: $('beszedtempo').value,
     stilus: $('stilus').value, felirat: $('felirat').value, cta: $('cta').value.trim()};
-  const r = await fetch('/api/start', {method: 'POST', body: JSON.stringify(body)});
+  const r = await fetch('/api/start', {method: 'POST', headers: {'x-form': '1'}, body: JSON.stringify(body)});
   const d = await r.json();
   if (!r.ok) { $('allapot').textContent = d.hiba; return; }
   $('go').disabled = true; $('eredmeny').innerHTML = ''; $('log').textContent = '';

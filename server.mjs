@@ -1,4 +1,5 @@
-// Formu açan ve dosyaları proje klasörüne yazan küçük yerel sunucu. Sadece bu bilgisayardan erişilir.
+// Kis helyi szerver: egy felület két füllel (Videó vágása / Reel scriptből). Csak erről a gépről érhető el.
+// Indítás: node server.mjs  ->  http://127.0.0.1:4173
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -8,6 +9,11 @@ import {exec, spawn} from 'node:child_process';
 import {pipeline} from 'node:stream/promises';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
+// A Reel Stúdió relatív utakkal dolgozik, és a `claude` parancsot keresi: munkakönyvtár = projekt gyökere,
+// PATH csak erre a folyamatra bővítve (nem állandó beállítás).
+process.chdir(root);
+process.env.PATH = [path.join(os.homedir(), '.local', 'bin'), '/opt/homebrew/bin', '/usr/local/bin', process.env.PATH].join(path.delimiter);
+const {studioKezelo} = await import('./tools/studio.mjs');
 const matRoot = path.join(root, 'materyaller');
 let port = 4173;
 
@@ -18,7 +24,11 @@ const server = http.createServer(async (req, res) => {
   try {
     if (!hostOk(req)) return json(res, 403, {ok: false, error: 'host'});
     const url = new URL(req.url, 'http://127.0.0.1');
-    if (req.method === 'GET' && (url.pathname === '/' || url.pathname === '/form.html')) {
+    if (req.method === 'GET' && url.pathname === '/') {
+      res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
+      return res.end(fs.readFileSync(path.join(root, 'fooldal.html')));
+    }
+    if (req.method === 'GET' && (url.pathname === '/vago' || url.pathname === '/form.html')) {
       res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
       return res.end(fs.readFileSync(path.join(root, 'form.html')));
     }
@@ -86,6 +96,8 @@ const server = http.createServer(async (req, res) => {
         return json(res, 200, {ok: true});
       }
     }
+    if (url.pathname === '/api/start' && req.headers['x-form'] !== '1') return json(res, 403, {hiba: 'header'});
+    if (await studioKezelo(req, res)) return;
     json(res, 404, {ok: false});
   } catch (e) {
     json(res, 500, {ok: false, error: String(e && e.message)});
@@ -94,12 +106,12 @@ const server = http.createServer(async (req, res) => {
 
 server.on('error', (e) => {
   if (e.code === 'EADDRINUSE' && port < 4200) { port++; server.listen(port, '127.0.0.1'); }
-  else { console.error('Sunucu açılamadı:', e.message); process.exit(1); }
+  else { console.error('A szerver nem indult el:', e.message); process.exit(1); }
 });
 server.on('listening', () => {
   const addr = `http://127.0.0.1:${port}`;
-  console.log(`Form açık: ${addr}`);
-  console.log('Bu pencereyi formu kullandığın sürece açık tut. Kapatmak için pencereyi kapat.');
+  console.log(`Aetherpontis Videó Stúdió: ${addr}`);
+  console.log('Amíg használod, hagyd nyitva ezt az ablakot. Leállítás: zárd be az ablakot (vagy Ctrl+C).');
   const cmd = process.platform === 'win32' ? `start "" ${addr}` : process.platform === 'darwin' ? `open ${addr}` : `xdg-open ${addr}`;
   exec(cmd, () => {});
 });

@@ -16,7 +16,7 @@ Az első render letölti a Remotion saját böngészőjét (egyszer, kb. 100 MB)
 
 Három út van, mindegyik ugyanazt a rendszert használja.
 
-**1. Reel Stúdió (a legegyszerűbb).** A Terminálban: `npm run studio-reel`. Megnyílik a böngészőben egy oldal: beilleszted a scriptet, kiválasztod a hangot, a tempót és a stílust, és rányomsz a „Reel készítése” gombra. A kész videó ugyanott lejátszható. Ha a gépen van Claude Code, az ágens dolgozik (szöveges és rajzfilmes sztori reel is); ha nincs, gépi szöveges reel készül.
+**1. Videó Stúdió (a legegyszerűbb).** A Terminálban: `npm start` (vagy dupla kattintás a `baslat.command` fájlra). Megnyílik a böngészőben a http://127.0.0.1:4173 oldal. A tetején választhatsz: **Videó vágása** (meglévő felvétel vágása, feliratozása) vagy **Reel scriptből**. A Reel fülön beilleszted a scriptet, kiválasztod a hangot, a tempót és a stílust, és rányomsz a „Reel készítése” gombra. A kész videó ugyanott lejátszható. Ha a gépen van Claude Code, az ágens dolgozik (szöveges és rajzfilmes sztori reel is); ha nincs, gépi szöveges reel készül.
 
 **2. Claude Code-ban egy sorral.** Indítsd el a `claude` parancsot ebben a mappában, és írd be:
 

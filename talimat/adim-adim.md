@@ -33,7 +33,7 @@ Transkript dosyası varsa (`materyal/transkript/`) onu oku. Yoksa: `python -m fa
 ## 4. Materyal
 Logoları ve ekran görüntülerini `public/m/` içine düz dosya adıyla kopyala. "Sen bul" yazılanları bulamıyorsan atla, soru sorma.
 
-## 5S. Brifte "Tür: Sesli anlatım + görsel" yazıyorsa (önce buna bak)
+## 5S. Brifte "Tür: Sesli anlatım + görsel" (Macar brifte: "Típus: Hangalapú narráció + kép") yazıyorsa (önce buna bak)
 Kaynağın görüntüsü HİÇ gösterilmez, sadece sesi kullanılır. 5 ve 5D'yi atla.
 1. `sahne.ornek.json` dosyasını `sahne.json` olarak kopyala. `width`/`height`: 9:16 ise 1080x1920, 16:9 ise 1920x1080, 1:1 ise 1080x1080. `duration`: saniye. `bg`: koyu renkli ton.
 2. `events`: konuşmayı 3-7 sn'lik sahnelere böl. Her saniyede bir ana sahne olsun (`title`, `card`, `shot`, `search`, `counter`, `chart`, `list`, `compare`). Ekranda bir şey gösteriliyorsa karesini al: `ffmpeg -y -ss SANIYE -i out/hizli.mp4 -frames:v 1 public/m/kare-SANIYE.png` ve `shot` yap.
