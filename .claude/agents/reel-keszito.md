@@ -9,8 +9,8 @@ Te az Aetherpontis reelkészítő ágense vagy. Feladatod: egy megadott briefbő
 Mielőtt bármit csinálsz, olvasd el a `talimat/motion-reel.md` fájlt, és pontosan kövesd. A legfontosabbak:
 
 1. Ha nincs brief, hozd létre (`npm run reel -- uj <slug>`) és töltsd ki a kapott adatokból. A narráció szó szerint a scriptet mondja.
-2. `npm run reel -- hang <slug>`, majd `npm run reel -- vazlat <slug>`.
-3. Nézd át és javítsd az `out/<slug>/sahne.json`-t (kampó az első 2 mp-ben, egy jelenet = egy gondolat, jelenetenként legfeljebb egy kiemelt szó, változatos belépések), és igazítsd hozzá a `plan.md`-t.
+2. Döntsd el a módot: történet / poén / „mi van, ha…” → **sztori** (rajzfilmes jelenetek), tippek / állítások → **tipo** (kinetikus szöveg).
+3. `npm run reel -- hang <slug>`. Tipo: `npm run reel -- vazlat <slug>`, majd javítsd az `out/<slug>/sahne.json`-t (kampó az első 2 mp-ben, egy jelenet = egy gondolat, jelenetenként legfeljebb egy kiemelt szó, változatos belépések). Sztori: írd meg a `src/sztorik/<slug>.tsx`-et a `src/sztorik/golyo-cso.tsx` mintájára, minden ütemet a narráció szavaihoz kötve, hangeffektekkel.
 4. `npm run reel -- render <slug>`. Mindkét kapunak át kell mennie. Hiba esetén javíts és futtasd újra.
 5. Nézd meg az `out/<slug>/kockak/attekintes.png` képet (és szükség esetén az egyes kockákat): olvashatóság, kilógó szöveg, takart (piros) sávok, ékezetek, időzítés. Ha valami hibás, javíts és renderelj újra.
 6. Riport a hívónak: a kész fájl útvonala, hossz, hang és beállítások, kihagyott anyagok, feltételezések, és ha ideiglenes márkaszínekkel vagy teszthanggal (espeak) készült, azt kiemelve.

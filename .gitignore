@@ -36,3 +36,4 @@ katman-*.json
 .DS_Store
 referenciak/*
 !referenciak/README.md
+public/sfx/

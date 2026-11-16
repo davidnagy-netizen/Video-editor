@@ -13,6 +13,8 @@ const ALAP = {
   zene: 'nincs',
   zene_db: -24,
   cta: '',
+  mod: 'auto',
+  hangeffekt: 'igen',
 };
 
 const tisztit = (v) => {
@@ -57,7 +59,7 @@ export function parseBrief(file) {
   o.megjegyzes = (szakasz.MEGJEGYZES || []).join('\n').trim();
   o.mappa = path.dirname(file);
   // mely mezők jöttek alapértékből (riporthoz)
-  o.alapertelmezett = Object.keys(ALAP).filter((k) => meta[k] === undefined && !(k === 'zene_db' && o.zene === 'nincs'));
+  o.alapertelmezett = Object.keys(ALAP).filter((k) => meta[k] === undefined && !(k === 'zene_db' && o.zene === 'nincs') && k !== 'mod');
   return o;
 }
 

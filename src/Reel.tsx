@@ -1,5 +1,5 @@
 import React from 'react';
-import {AbsoluteFill, Img, Sequence, continueRender, delayRender, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Html5Audio, Img, Sequence, continueRender, delayRender, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {BoxProvider} from './box';
 import {One} from './Overlay';
 import {Ev} from './types';
@@ -135,7 +135,8 @@ const Szamlalo: React.FC<{ev: SzamlaloEv; dur: number}> = ({ev, dur}) => {
   const {style, frame, fps} = useMozgas(dur, ev.be ?? 'zoom');
   const p = interpolate(frame, [4, 4 + Math.min(fps * 1.1, dur * 0.5)], [0, 1], CL);
   const e = 1 - Math.pow(2, -10 * p);
-  const v = Math.round(ev.ertek * (p >= 1 ? 1 : e));
+  // kis számot (pl. felsorolás sorszáma) nem pörgetünk fel, csak beugrik
+  const v = ev.ertek <= 10 ? ev.ertek : Math.round(ev.ertek * (p >= 1 ? 1 : e));
   const txt = v.toLocaleString('hu-HU');
   const vonal = interpolate(frame, [8, 26], [0, 1], CL);
   const now = frame / fps;
@@ -292,7 +293,22 @@ const Egy: React.FC<{ev: REv; dur: number}> = ({ev, dur}) => {
 const SAFE_ALAP = {fent: 290, lent: 450, oldal: 80};
 const SORREND: Record<string, number> = {felirat: 50, progress: 60, logo: 55};
 
-export const Reel: React.FC<ReelProps> = ({events, theme, fps, bg, safe, logo, hatter}) => {
+// Automatikus hangeffektek a jelenetekhez (public/sfx/, a render előtt a pipeline másolja oda)
+const hangok = (events: REv[]) => {
+  const out: {nev: string; t: number; db: number}[] = [];
+  events.forEach((ev) => {
+    if (ev.type === 'felirat' || ev.type === 'progress') return;
+    const e = ev as {start: number; atmenet?: boolean; hook?: boolean; type: string};
+    if (e.atmenet) out.push({nev: 'whoosh', t: Math.max(0, e.start - 0.05), db: -10});
+    else if (e.type === 'kinetik' && e.hook) out.push({nev: 'pop', t: e.start + 0.05, db: -12});
+    if (e.type === 'szamlalo') out.push({nev: 'tik', t: e.start + 0.15, db: -14});
+    if (e.type === 'felsorolas') out.push({nev: 'pop', t: e.start + 0.1, db: -16});
+    if (e.type === 'cta') out.push({nev: 'ding', t: e.start + 0.3, db: -10});
+  });
+  return out;
+};
+
+export const Reel: React.FC<ReelProps> = ({events, theme, fps, bg, safe, logo, hatter, hangeffekt}) => {
   const {width, height} = useVideoConfig();
   const k = width / 1080;
   const s = safe ?? SAFE_ALAP;
@@ -313,6 +329,11 @@ export const Reel: React.FC<ReelProps> = ({events, theme, fps, bg, safe, logo, h
                 </Sequence>
               );
             })}
+            {hangeffekt ? hangok(events).map((h, i) => (
+              <Sequence key={'h' + i} from={Math.round(h.t * fps)} layout="none">
+                <Html5Audio src={staticFile('sfx/' + h.nev + '.wav')} volume={Math.pow(10, h.db / 20)} />
+              </Sequence>
+            )) : null}
             {logo ? <Img src={staticFile('m/' + logo)} style={{position: 'absolute', top: ctx.safe.fent - 110 * ctx.u, left: ctx.safe.oldal, height: 64 * ctx.u, opacity: 0.9}} /> : null}
           </AbsoluteFill>
         </BoxProvider>

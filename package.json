@@ -13,10 +13,14 @@
     "kontrol": "node scripts/kontrol.mjs",
     "sahne": "remotion render src/index.ts Overlay out/sahne-sessiz.mp4 --props=sahne.json --codec=h264 --muted",
     "reel": "node tools/reel.mjs",
-    "hangok": "node tools/hangok.mjs"
+    "hangok": "node tools/hangok.mjs",
+    "sfx": "node tools/sfx.mjs",
+    "studio-reel": "node tools/studio.mjs"
   },
   "dependencies": {
     "@remotion/cli": "4.0.540",
+    "@remotion/paths": "^4.0.540",
+    "@remotion/shapes": "^4.0.540",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "remotion": "4.0.540"

@@ -95,7 +95,9 @@ async function espeak({tts, preset, tempo, tmp}) {
   let t = 0;
   ms.forEach((m, i) => {
     const f = path.join(tmp, `m${i}.wav`);
-    run(bin, ['-v', preset.hang || 'hu', '-s', String(Math.round(165 * tempo)), '-w', f, m.szoveg]);
+    const args = (v) => ['-v', v, '-s', String(Math.round(165 * tempo)), '-w', f, m.szoveg];
+    // az MBROLA-hang (mb-hu1) szebb, de külön csomag; ha nincs telepítve, marad az alap espeak-hang
+    if (run(bin, args(preset.hang || 'hu'), {okOnFail: true}).status !== 0 || !fs.existsSync(f) || fs.statSync(f).size < 1000) run(bin, args('hu'));
     const d = hossz(f);
     szakaszok.push({a: m.a, b: m.b, t0: t + 0.05, t1: t + d - 0.12});
     lista.push(`file '${path.resolve(f)}'`);

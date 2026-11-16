@@ -12,15 +12,32 @@ Scriptből kész, narrált 9:16-os motion graphic reel: animált tipográfia, sz
 
 Az első render letölti a Remotion saját böngészőjét (egyszer, kb. 100 MB).
 
-## Reel készítése az ágenssel (ajánlott)
+## Reel készítése: beilleszted a scriptet, és kész
 
-Nyisd meg a Terminált ebben a mappában, indítsd el a Claude Code-ot (`claude`), és írd be például:
+Három út van, mindegyik ugyanazt a rendszert használja.
 
-> Készíts reelt ebből a scriptből: „…”. Hang: noemi, beszédtempó 1.05, gyors vágás, aetherpontis stílus.
+**1. Reel Stúdió (a legegyszerűbb).** A Terminálban: `npm run studio-reel`. Megnyílik a böngészőben egy oldal: beilleszted a scriptet, kiválasztod a hangot, a tempót és a stílust, és rányomsz a „Reel készítése” gombra. A kész videó ugyanott lejátszható. Ha a gépen van Claude Code, az ágens dolgozik (szöveges és rajzfilmes sztori reel is); ha nincs, gépi szöveges reel készül.
 
-Az ágens megírja a briefet, legenerálja a hangot, megtervezi és átnézi a jeleneteket, renderel, lefuttatja a két ellenőrzést, megnézi a képkockákat, és megmondja, hol a kész videó. Több reel egyszerre: „Készítsd el a materyaller mappában lévő összes új briefet” – ilyenkor a `reel-keszito` alügynök reelenként külön dolgozik.
+**2. Claude Code-ban egy sorral.** Indítsd el a `claude` parancsot ebben a mappában, és írd be:
 
-A Cowork asztali alkalmazásban (csatolt mappával) is működik, de ott a cégszintű hálózati szabályok miatt az ElevenLabs és a Microsoft hangszolgáltatás le lehet tiltva. Ilyenkor a hangot a Terminálban generáld, vagy kérd meg az adminisztrátort, hogy engedélyezze az `api.elevenlabs.io` címet.
+> /reel Mi van, ha kilövünk egy golyót egy csőbe, ami visszavezet ránk? … Hang: el-ferfi, pörgős.
+
+Az ágens nem kérdez: eldönti, hogy szöveges (kinetikus tipográfia) vagy rajzfilmes sztori reel illik-e a scripthez, legenerálja a hangot, megrajzolja a jeleneteket, hangeffekteket tesz alá, renderel, ellenőriz, és megmondja, hol a kész videó.
+
+**3. Egyetlen paranccsal, ágens nélkül (csak szöveges reel).**
+
+```
+npm run reel -- gyors "Három tipp, hogy ne fulladj bele az e-mailekbe. Egy: …" --tempo porgos --stilus neon
+```
+
+## A két mód
+
+- **Szöveges (tipo):** nagy, a beszéddel szóra pontosan együtt mozgó szöveg, számlálók, felsorolások, CTA. Tippekhez, állításokhoz, oktató tartalomhoz.
+- **Sztori:** rajzfilmes jelenetek szereplőkkel és tárgyakkal (pisztoly, golyó, cső, laptop, iroda, figura, pecsét, robbanás…), kamerarázással, villanással, hangeffektekkel. Vicces, „mi van, ha…” típusú ötletekhez. A minta a `src/sztorik/golyo-cso.tsx` (a golyós reel); az ágens minden új sztorit ehhez hasonlóan, a scripthez igazítva rajzol meg.
+
+## Hangeffektek
+
+Alapból szólnak: suhanás a jelenetváltásnál, pukkanás, csengő a CTA-nál; sztori módban lövés, csörrenés, lemezkarc, boing, pecsét stb. (`npm run sfx -- lista`). ElevenLabs-kulccsal bármilyen új effekt generálható: `npm run sfx -- general "cartoon cash register ding" kassza`. Ezek a `hangeffekt/` mappába kerülnek, és onnan újrahasználhatók. Kikapcsolás a briefben: `hangeffekt: nem`.
 
 ## Reel készítése kézzel (parancsokkal)
 
@@ -30,16 +47,7 @@ npm run reel -- uj va-reggeli-emailek      # új brief: materyaller/va-reggeli-e
 npm run reel -- mind va-reggeli-emailek    # hang + vázlat + render egyben
 ```
 
-Vagy lépésenként, ha a jeleneteket kézzel szeretnéd finomítani:
-
-```
-npm run reel -- hang va-reggeli-emailek
-npm run reel -- vazlat va-reggeli-emailek  # out/va-reggeli-emailek/sahne.json és plan.md
-(sahne.json szerkesztése, előnézet: npm run studio → "Reel")
-npm run reel -- render va-reggeli-emailek
-```
-
-A kész videó: `out/<név>/<név>-<dátum-idő>.mp4`. Mellette a `kockak/attekintes.png` 8 képkockát mutat; a piros sávok azok a részek, amelyeket az Instagram felülete eltakar.
+Gyors próbához `--elonezet`: fél felbontásban, sokkal gyorsabban renderel. A végleges videó mindig teljes felbontásban készüljön.
 
 ## A brief beállításai
 
@@ -47,7 +55,9 @@ A kész videó: `out/<név>/<név>-<dátum-idő>.mp4`. Mellette a `kockak/atteki
 |---|---|---|
 | `hang` | `noemi`, `tamas`, `el-noi`, `el-ferfi`, `david-klon`, `mate-klon`, `emma-en`, `andrew-en`, `teszt` | A narrátor. Lista: `npm run hangok -- lista` |
 | `beszedtempo` | 0.85 – 1.2 | A narráció sebessége (1.0 = normál) |
-| `vagasi_tempo` | `nyugodt`, `kozepes`, `gyors` | Milyen gyakran vált a kép: 4–6 / 2,5–4 / 1,5–2,5 mp-enként |
+| `vagasi_tempo` | `nyugodt`, `kozepes`, `gyors`, `porgos` | Milyen gyakran vált a kép: 4–6 / 2,5–4 / 1,5–2,5 / 0,8–1,6 mp-enként |
+| `mod` | `auto`, `tipo`, `sztori` | Szöveges vagy rajzfilmes reel (auto: az ágens dönt) |
+| `hangeffekt` | `igen`, `nem` | Hangeffektek a jelenetekhez |
 | `stilus` | `aetherpontis`, `vilagos`, `neon`, `editoryal` | Színek, betűtípus, háttér |
 | `felirat` | `karaoke`, `sima`, `nincs` | Karaoke: az éppen elhangzó szó kiemelve |
 | `zene` | `nincs` vagy fájlnév | Háttérzene a `materyal/` mappából; beszéd alatt automatikusan halkul |
@@ -66,3 +76,4 @@ A kész videó: `out/<név>/<név>-<dátum-idő>.mp4`. Mellette a `kockak/atteki
 - A kódbázis a [omergocmen/ai-video-edit-workflow](https://github.com/omergocmen/ai-video-edit-workflow) (MIT) projektre épül, ezért a régi fájl- és mezőnevek egy része török. A meglévő videószerkesztő mód (felvett videó szerkesztése) továbbra is használható, lásd `README.eredeti.md`.
 - **Remotion licenc:** a Remotion 3 főnél nagyobb profitorientált cégeknek fizetős céges licencet ír elő. Éles használat előtt nézzétek meg a remotion.pro oldalon, hogy rátok mi vonatkozik.
 - Az API-kulcs csak a `.env` fájlban legyen; az nem kerül fel a GitHubra.
+- Fegyveres poénokat organikus posztban nyugodtan, de **fizetett hirdetésben a Meta a fegyvert ábrázoló kreatívokat elutasíthatja**. Hirdetéshez érdemes a golyót más tárgyra cserélni (pl. papírrepülő, labda).

@@ -8,9 +8,22 @@ A mód a `talimat/video-edit.md` **5S. Sesli anlatım + görsel** lépésére é
 
 Aetherpontis Solutions OÜ: virtuális asszisztens szolgáltatás és szoftverfejlesztés európai KKV-knak, vállalkozóknak. A reelek elsődleges nyelve magyar, de angol scriptet is kezelni kell. Magyar szövegben az ajánlat neve mindig „virtuális asszisztens”.
 
+## Autopilóta: script be → kész videó ki (ez az alapértelmezett működés)
+
+A felhasználó általában csak egy scriptet ad (néha pár beállítással: hang, stílus, tempó). **Ne kérdezz semmit.** Végig, megszakítás nélkül:
+
+1. **Brief:** `npm run reel -- uj <slug>` (rövid, ékezet nélküli slug a script első szavaiból), töltsd ki: SCRIPT szó szerint, a megadott beállítások, a többi alapérték. Ha van `ELEVENLABS_API_KEY` a `.env`-ben és a felhasználó nem kért mást, a hang `el-ferfi` vagy `el-noi` legyen (a script hangvételéhez illően), különben `noemi`/`tamas`.
+2. **Mód eldöntése** (ha nincs megadva):
+   - **sztori**: ha a script helyzetet, történetet, képzeletbeli kísérletet, poént ír le, tárgyakkal vagy szereplőkkel („Mi van, ha…”, „Képzeld el…”, „Egy vállalkozó bemegy…”). Ilyenkor rajzfilmes jeleneteket rajzolsz (lásd „Sztori mód”).
+   - **tipo**: tippek, felsorolások, állítások, számok, oktató jellegű szöveg. Kinetikus tipográfia (lásd „Lépések”).
+3. **Tempó:** vicces vagy pörgős hangvételnél `vagasi_tempo: porgos` és `beszedtempo: 1.1`, egyébként `gyors`.
+4. Hang → jelenetek (tipo: vázlat + átnézés; sztori: a `src/sztorik/<slug>.tsx` megírása) → `npm run reel -- render <slug>` → kapuk → képkockák megnézése → javítás, ha kell → riport.
+
+Ha valami nem megy (pl. nincs API-kulcs, nincs internet), válts a legközelebbi működő megoldásra (ingyenes hang, majd `teszt` hang), és a riportban írd meg, mit kell pótolni. A riport rövid: a kész fájl útvonala, hossz, hang, mód, feltételezések.
+
 ## Négy szabály (mindennél fontosabb)
 
-1. **A narráció pontosan a scriptet mondja, szó szerint.** A képernyőn megjelenő szöveg rövidíthet, de nem adhat hozzá új állítást, számot, ígéretet vagy ügyfélnevet, ami a scriptben nincs.
+1. **A narráció pontosan a scriptet mondja, szó szerint.** A képernyőn megjelenő szöveg rövidíthet, de nem adhat hozzá új állítást, számot, ígéretet vagy ügyfélnevet, ami a scriptben nincs. Sztori módban rövid poén-szöveg (hangutánzó szó, szereplő reakciója, pl. „BUMM!”, „Na, ezt megnézem.”) mehet, de tényállítás, szám vagy ígéret nem.
 2. **Minden jelenet arra a szóra indul, amelyiknél a narráció odaér.** Az időket mindig az `out/<slug>/szavak.json`-ból vedd, sosem becsüld.
 3. **Kapuk nélkül nincs átadás.** `kontrol.mjs sahne` render előtt, `kontrol.mjs cikti` render után. Hiba esetén javíts és futtasd újra. A kapukat nem lehet kihagyni.
 4. **Nézd meg, amit csináltál.** A render után nézd meg az `out/<slug>/kockak/attekintes.png` képet és szükség esetén az egyes kockákat. A piros sávok az Instagram-felület által takart részek: oda nem kerülhet fontos szöveg.
@@ -25,7 +38,9 @@ cim: va-reggeli-emailek
 nyelv: hu              # hu | en
 hang: noemi            # ayarlar/hangok.json kulcsa
 beszedtempo: 1.05      # 0.85–1.2, a narráció sebessége
-vagasi_tempo: gyors    # nyugodt (4–6 mp/jelenet) | kozepes (2,5–4) | gyors (1,5–2,5)
+vagasi_tempo: gyors    # nyugodt (4–6 mp/jelenet) | kozepes (2,5–4) | gyors (1,5–2,5) | porgos (0,8–1,6)
+mod: auto              # auto | tipo | sztori
+hangeffekt: igen       # igen | nem (whoosh, pop, ding a jelenetekhez)
 stilus: aetherpontis   # ayarlar/stilusok.json kulcsa
 felirat: karaoke       # karaoke | sima | nincs
 zene: nincs            # vagy fájlnév a materyal/ mappából
@@ -89,10 +104,37 @@ Szemrevételezés (`kockak/attekintes.png`, kétség esetén az egyes kockák va
 - A jelenetek a megfelelő szónál indulnak-e?
 Ha bármi hibás: javítsd a `sahne.json`-t, és futtasd újra a rendert.
 
-Egyben is futtatható (a vázlatot felülírja, kézi javítás nélkül): `npm run reel -- mind <slug>`.
+Egyben is futtatható (a vázlatot felülírja, kézi javítás nélkül): `npm run reel -- mind <slug>`. Ágens nélkül, egyetlen paranccsal, közvetlenül a scriptből: `npm run reel -- gyors "<script>" [--hang noemi] [--tempo porgos] [--stilus neon] [--elonezet]`.
+
+Gyorsítás: a render a gép magjainak 75%-át használja. Próbához `--elonezet` (fél felbontás, kb. négyszer gyorsabb), a végleges videó mindig teljes felbontásban készüljön.
 
 ### 5. Riport
 Rövid, a fájlt ne nyisd meg. Tartalma: a kész fájl útvonala, hossz, hang és beállítások, mi maradt ki (hiányzó anyag), milyen feltételezéseket tettél, és ha ideiglenes márkaszínekkel készült (`"ideiglenes": true` a stílusban), azt is.
+
+## Sztori mód (rajzfilmes, vicces reelek)
+
+Itt nincs gépi vázlat: a jelenetet te írod meg React/SVG kódként a `src/sztorik/<slug>.tsx` fájlba, a `src/sztori/kit.tsx` készletből. **Mintának mindig nyisd meg a `src/sztorik/golyo-cso.tsx`-et**, és kövesd a felépítését (több jelenet időben egymás után, külön `Hangok` komponens, minden idő a narrációhoz kötve).
+
+Menet:
+1. `npm run reel -- hang <slug>`, majd nézd meg az `out/<slug>/szavak.json`-t: ezekre a szavakra fogod kötni a történés ütemeit.
+2. Írd meg a `src/sztorik/<slug>.tsx`-et (`export default` egy komponens). Szerkezet: `ido('szó')` → időpontok; jelenetek `t` alapján váltva; minden jelenetben `<Hatter />`, `<Kamera kulcsok=… razas=…>` a világgal, a képernyőhöz rögzített feliratok a kamerán kívül.
+3. `npm run tip` (típusellenőrzés), majd gyors próbakockák: `npx remotion still src/index.ts Sztori out/<slug>/proba.png --frame=<N> --props=out/<slug>/sztori.json --scale=0.5` (a `sztori.json`-t az első `render` hozza létre; vagy futtass egy `npm run reel -- render <slug> --elonezet`-et, ami fél felbontásban, gyorsan renderel).
+4. `npm run reel -- render <slug>` (a pipeline magától sztori módba vált, ha létezik a `src/sztorik/<slug>.tsx`).
+
+A készlet (`src/sztori/kit.tsx`), 1080×1920-as világkoordinátákban:
+- Idő: `useIdo()`, `useSzoIdo()` → `ido('szó', n)`, `ido.vege('szó')` (elírt szónál a render hibát dob és kiírja az elérhető szavakat), `anim(t, [t0, t1], [a, b], Ease.lassul)`, `rugo(t, t0, pattogas)`.
+- Kamera és elhelyezés: `<Kamera kulcsok={[{t, x, y, z}]} razas={[{t, ero}]}>`, `<Elem x y s r o flip>`, `utMenten(svgUt, p)` → pont és szög egy útvonalon (pl. golyó a csőben).
+- Kellékek: `Pisztoly` (visszarúgással), `Golyo` (arc, kacsintás, szemüveg), `Cso` (SVG útvonal mentén, felépülő), `Figura` (arc: normal, meglepett, ijedt, boldog, ravasz; integet), `Laptop` (növekvő irányítópult), `Iroda` (táblával vagy logóval, kigyulladó ablakok), `Pecset`, `Gomb`, `Kep` (fájl a materyal/marka mappából).
+- Szöveg és effekt: `Cim`, `Buborek`, `Bumm` (képregényes robbanás), `Villanas`, `Fust`, `SebessegVonalak`, `Konfetti`, `Hatter`.
+- Hang: `<Hang nev="loves" t={…} db={-4} />`. Beépített: loves, whoosh, whoosh_hosszu, pop, ding, bumm, csorrenes, karc, siker, tik, boing, pecset (`npm run sfx -- lista`). Ha kell más (pl. „ricochet”, „cash register”), és van ElevenLabs-kulcs: `npm run sfx -- general "cartoon ricochet ping" rikoset 1` → `hangeffekt/rikoset.mp3`, utána `<Hang nev="rikoset" …/>`.
+- Ha a készletből hiányzik egy kellék (autó, rakéta, pénzeső…), rajzold meg SVG-ben ugyanebben a stílusban (vastag sötét kontúr `#111827`, lapos színek, a téma színei), és ha újrahasználható, tedd be a `kit.tsx`-be.
+
+Sztori-szabályok:
+- **Ritmus:** 1–2 másodpercenként történjen valami (kameramozgás, belépő kellék, poén, hang). Vágás vagy nagy kameraváltás a mondathatároknál.
+- **A poén legyen látható:** a csattanó pillanatában rázás, villanás vagy nagy felirat, és hozzá illő hang.
+- **Biztonsági zóna:** a fontos dolgok a képernyőn y = 290 és 1380 között legyenek (alul a feliratsáv van). A kamera nagyítását számold bele: képernyő-y = 960 + (világ-y − kamera-y) · z.
+- A feliratsávot (karaoke) a kompozíció magától teszi alá; ne rajzolj alá mást.
+- Fegyver, erőszak csak rajzfilmesen és ártalmatlanul (senki nem sérül meg). Fizetett hirdetésnél a Meta a fegyveres képeket elutasíthatja; ezt a riportban jelezd, ha ilyen kellék van benne.
 
 ## A `Reel` jelenetek (sahne.json `events`)
 

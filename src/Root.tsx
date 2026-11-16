@@ -6,6 +6,15 @@ import {Dikey} from './Dikey';
 import {Grafik, GProps} from './Grafik';
 import {Reel} from './Reel';
 import {ReelProps} from './reelTypes';
+import {Sztori, SztoriCompProps} from './sztori/Sztori';
+import {sztorik} from './sztorik';
+
+const sztoriDemo: SztoriCompProps = {
+  slug: Object.keys(sztorik)[0] ?? '', width: 1080, height: 1920, fps: 30, duration: 10, bg: '#0E1726', felirat: 'karaoke',
+  safe: {fent: 290, lent: 450, oldal: 80},
+  theme: {primary: '#3DD6C6', secondary: '#1E2A3D', accent: '#FFB547', szoveg: '#FFFFFF', halvany: '#B8C2D3', font: 'Inter Display'},
+  szavak: []
+};
 
 const reelDemo: ReelProps = {
   width: 1080, height: 1920, fps: 30, duration: 9, bg: '#0E1726', hatter: 'racs',
@@ -81,6 +90,19 @@ export const Root: React.FC = () => (
     defaultProps={grafikDemo}
     calculateMetadata={({props}) => ({
       width: 1080, height: 1920, fps: props.fps,
+      durationInFrames: Math.max(1, Math.round(props.duration * props.fps))
+    })}
+  />
+  <Composition
+    id="Sztori"
+    component={Sztori}
+    width={1080}
+    height={1920}
+    fps={30}
+    durationInFrames={300}
+    defaultProps={sztoriDemo}
+    calculateMetadata={({props}) => ({
+      width: props.width, height: props.height, fps: props.fps,
       durationInFrames: Math.max(1, Math.round(props.duration * props.fps))
     })}
   />

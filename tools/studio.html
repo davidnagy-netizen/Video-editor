@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aetherpontis Reel Stúdió</title>
+<style>
+  :root { --bg: #0E1726; --panel: #16223A; --line: #24324D; --text: #E8EEF6; --muted: #93A1B8; --accent: #3DD6C6; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.5 -apple-system, "Segoe UI", Inter, sans-serif; }
+  main { max-width: 1100px; margin: 0 auto; padding: 32px 24px; display: grid; grid-template-columns: 1fr 380px; gap: 24px; }
+  h1 { grid-column: 1 / -1; margin: 0; font-size: 22px; font-weight: 700; }
+  h1 small { color: var(--muted); font-weight: 400; font-size: 14px; margin-left: 8px; }
+  section { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
+  label { display: block; color: var(--muted); font-size: 13px; margin: 14px 0 6px; }
+  label:first-child { margin-top: 0; }
+  textarea, select, input { width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; font: inherit; }
+  textarea { min-height: 220px; resize: vertical; }
+  .sor { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  button { margin-top: 18px; width: 100%; padding: 14px; border: 0; border-radius: 10px; background: var(--accent); color: #0E1726; font: 700 16px/1 inherit; cursor: pointer; }
+  button:disabled { opacity: .5; cursor: default; }
+  #log { margin-top: 16px; height: 260px; overflow: auto; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 10px; font: 12px/1.5 ui-monospace, Menlo, monospace; color: var(--muted); white-space: pre-wrap; }
+  video { width: 100%; border-radius: 10px; background: #000; aspect-ratio: 9 / 16; }
+  .megj { color: var(--muted); font-size: 13px; margin-top: 10px; }
+  .allapot { font-size: 13px; color: var(--muted); }
+  .allapot b { color: var(--text); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Reel Stúdió <small>script be → kész reel ki</small></h1>
+  <section>
+    <label for="script">Script (szó szerint ezt mondja a narrátor)</label>
+    <textarea id="script" placeholder="Pl.: Mi van, ha kilövünk egy golyót egy csőbe, ami visszavezet ránk? …"></textarea>
+    <div class="sor">
+      <div><label for="mod">Mód</label>
+        <select id="mod">
+          <option value="auto">Automatikus (az ágens dönt)</option>
+          <option value="sztori">Sztori – rajzfilmes, vicces jelenetek</option>
+          <option value="tipo">Szöveges – kinetikus tipográfia</option>
+        </select></div>
+      <div><label for="hang">Hang</label><select id="hang"></select></div>
+    </div>
+    <div class="sor">
+      <div><label for="tempo">Vágási tempó</label>
+        <select id="tempo">
+          <option value="porgos">Pörgős (0,8–1,6 mp)</option>
+          <option value="gyors" selected>Gyors (1,5–2,5 mp)</option>
+          <option value="kozepes">Közepes (2,5–4 mp)</option>
+          <option value="nyugodt">Nyugodt (4–6 mp)</option>
+        </select></div>
+      <div><label for="beszedtempo">Beszédtempó</label>
+        <select id="beszedtempo">
+          <option value="0.9">Lassabb (0,9)</option>
+          <option value="1.0" selected>Normál (1,0)</option>
+          <option value="1.1">Gyorsabb (1,1)</option>
+          <option value="1.2">Nagyon gyors (1,2)</option>
+        </select></div>
+    </div>
+    <div class="sor">
+      <div><label for="stilus">Stílus</label><select id="stilus"></select></div>
+      <div><label for="felirat">Felirat</label>
+        <select id="felirat">
+          <option value="karaoke">Karaoke</option>
+          <option value="sima">Sima</option>
+          <option value="nincs">Nincs</option>
+        </select></div>
+    </div>
+    <label for="cta">Záró felirat (nem kötelező)</label>
+    <input id="cta" placeholder="Pl.: Próbáld ki ingyen">
+    <button id="go">Reel készítése</button>
+    <div class="megj" id="info"></div>
+  </section>
+  <section>
+    <div class="allapot" id="allapot">Még nem indult reel.</div>
+    <div id="log"></div>
+    <div id="eredmeny"></div>
+  </section>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+let info = null;
+fetch('/api/info').then((r) => r.json()).then((d) => {
+  info = d;
+  for (const h of d.hangok) {
+    const o = new Option(`${h.id} – ${h.leiras || h.szolgaltato}`, h.id);
+    if (h.szolgaltato === 'elevenlabs' && !d.elevenlabs) o.disabled = true;
+    $('hang').add(o);
+  }
+  $('hang').value = d.elevenlabs ? 'el-ferfi' : 'noemi';
+  for (const s of d.stilusok) $('stilus').add(new Option(s, s));
+  const sor = [];
+  sor.push(d.claude ? 'Az ágens (Claude Code) készíti a reelt, szöveges és sztori módban is.' : 'Claude Code nincs telepítve: csak szöveges reel készül, a sztori mód nem elérhető.');
+  if (!d.elevenlabs) sor.push('Nincs ElevenLabs-kulcs a .env fájlban: az ingyenes hangok érhetők el.');
+  $('info').textContent = sor.join(' ');
+  if (!d.claude) { $('mod').value = 'tipo'; $('mod').disabled = true; }
+});
+
+$('go').onclick = async () => {
+  const body = {script: $('script').value, mod: $('mod').value, hang: $('hang').value, tempo: $('tempo').value, beszedtempo: $('beszedtempo').value,
+    stilus: $('stilus').value, felirat: $('felirat').value, cta: $('cta').value.trim()};
+  const r = await fetch('/api/start', {method: 'POST', body: JSON.stringify(body)});
+  const d = await r.json();
+  if (!r.ok) { $('allapot').textContent = d.hiba; return; }
+  $('go').disabled = true; $('eredmeny').innerHTML = ''; $('log').textContent = '';
+  const kezd = Date.now();
+  const kor = async () => {
+    const a = await (await fetch('/api/allapot?id=' + d.id)).json();
+    $('log').textContent = a.log.join('\n'); $('log').scrollTop = 1e9;
+    const mp = Math.round((Date.now() - kezd) / 1000);
+    if (!a.kesz) { $('allapot').innerHTML = `<b>Készül…</b> ${Math.floor(mp / 60)}:${String(mp % 60).padStart(2, '0')}`; return setTimeout(kor, 1500); }
+    $('go').disabled = false;
+    if (a.video) {
+      $('allapot').innerHTML = `<b>Kész.</b> ${a.fajl}`;
+      $('eredmeny').innerHTML = `<video src="${a.video}" controls autoplay playsinline style="margin-top:16px"></video>`;
+    } else $('allapot').innerHTML = `<b>Nem sikerült.</b> ${a.hiba || ''}`;
+  };
+  kor();
+};
+</script>
+</body>
+</html>

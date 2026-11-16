@@ -86,7 +86,8 @@ export function vazlat({brief, szavak, hossz, stilus, cfg}) {
   const szamKeres = (d) => {
     for (let k = 0; k < d.length; k++) {
       const v = szamErtek(szavak[d[k]].szo, nyelv);
-      if (!v || v.ertek < 2) continue;
+      // az „egy” általában névelő; csak felsorolás sorszámaként („Egy:”) számít számnak
+      if (!v || (v.ertek < 2 && !/[:.)]$/.test(szavak[d[k]].szo))) continue;
       const kov = szavak[d[k + 1]] ? kulcs(szavak[d[k + 1]].szo) : '';
       if (kov.startsWith('százalék') || kov === 'percent') v.utotag = '%';
       return {k, ...v};

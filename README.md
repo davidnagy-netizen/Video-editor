@@ -2,7 +2,8 @@
 
 Scriptből narrált motion graphic reeleket készítő, helyben futó rendszer és Claude Code ágens az Aetherpontis számára.
 
-- **Bemenet:** egy szövegkönyv (script) és néhány beállítás: hang, beszédtempó, vágási tempó, stílus, felirat.
+- **Bemenet:** egy szövegkönyv (script); minden más opcionális (hang, tempó, stílus, felirat). `npm run studio-reel` vagy Claude Code-ban `/reel <script>`.
+- **Két mód:** szöveges (kinetikus tipográfia) és sztori (rajzfilmes, vicces jelenetek, hangeffektekkel).
 - **Kimenet:** 1080×1920-as, 30 fps-es H.264 mp4, narrációval, a narrációhoz szóra pontosan időzített kinetikus tipográfiával, számlálókkal, felsorolásokkal, karaoke felirattal és záró CTA-val.
 - **Hang:** ElevenLabs (API-kulccsal) vagy ingyenes magyar Microsoft-hangok (edge-tts).
 - **Render:** [Remotion](https://www.remotion.dev/) + ffmpeg, minden a saját gépen fut; csak a hang generálása megy felhőbe.
@@ -23,6 +24,10 @@ npm run reel -- mind pelda-va-reggel
 | `tools/narracio.mjs` | Narráció + szószintű időbélyeg (ElevenLabs / edge-tts / espeak teszt) |
 | `tools/vazlat.mjs` | Gépi jelenetvázlat a szóidőkből (az ágens ezt finomítja) |
 | `tools/hangok.mjs` | Hanglista és hangminták |
+| `tools/sfx.mjs` | Hangeffektek (beépített, helyben generált + ElevenLabs) |
+| `tools/studio.mjs`, `tools/studio.html` | Reel Stúdió: helyi weboldal, script be → kész reel ki |
+| `src/sztori/kit.tsx`, `src/sztorik/` | Rajzfilmes sztori-készlet és a sztori-reelek (minta: `golyo-cso.tsx`) |
+| `.claude/commands/reel.md` | `/reel <script>` parancs Claude Code-ban |
 | `src/Reel.tsx`, `src/reelTypes.ts` | A motion graphic jelenetek (kinetik, szamlalo, felsorolas, cta, felirat, háttér, átmenetek) |
 | `scripts/kontrol.mjs` | Ellenőrző kapuk (render előtt és után) |
 | `ayarlar/` | Hangok, stílusok, közös reel-beállítások |

@@ -19,8 +19,10 @@ Genel kurallar:
 
 Ez a repó az Aetherpontis reelgyára is. Ha valaki **scriptből kér reelt / motion reelt / rövid videót**, scriptet ad videónak, vagy egy `materyaller/<slug>/brief.md` fájlra mutat, akkor ne a fenti videószerkesztő folyamatot használd, hanem olvasd el a `talimat/motion-reel.md` fájlt, és azt kövesd (Claude Code-ban: `motion-reel` skill, illetve `reel-keszito` alügynök).
 
-- Parancsok: `npm run reel -- uj|hang|vazlat|render|mind <slug>`, `npm run hangok -- lista|minta`.
-- A narráció szó szerint a scriptet mondja; a képernyőn nem jelenhet meg új állítás, szám vagy ügyfélnév.
+- Kérdés nélkül, a scripttől a kész mp4-ig dolgozz („Autopilóta” a talimat/motion-reel.md-ben). Claude Code-ban a `/reel <script>` parancs is ezt indítja.
+- Két mód: **tipo** (kinetikus szöveg, gépi vázlatból) és **sztori** (rajzfilmes, vicces jelenetek, amiket te írsz meg a `src/sztorik/<slug>.tsx`-be a `src/sztori/kit.tsx` készletből; minta: `src/sztorik/golyo-cso.tsx`).
+- Parancsok: `npm run reel -- uj|hang|vazlat|render|mind <slug>`, `npm run reel -- gyors "<script>"`, `npm run hangok -- lista|minta`, `npm run sfx -- lista|general`.
+- A narráció szó szerint a scriptet mondja; a képernyőn nem jelenhet meg új állítás, szám vagy ügyfélnév (sztori módban rövid poén-szöveg mehet).
 - A két kapu (`kontrol.mjs sahne` és `kontrol.mjs cikti`) nem hagyható ki; render után nézd meg az `out/<slug>/kockak/attekintes.png` képet.
 - API-kulcs csak a `.env` fájlban lehet, soha ne írd kódba, briefbe vagy riportba.
 - A felhasználó a magyar nyelvű útmutatót a `HASZNALAT.md`-ben olvassa.

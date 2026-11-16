@@ -8,7 +8,8 @@
  "vagasi_tempo": {
   "nyugodt": {"min": 4.0, "max": 6.0, "szo_max": 9},
   "kozepes": {"min": 2.5, "max": 4.0, "szo_max": 6},
-  "gyors":   {"min": 1.5, "max": 2.5, "szo_max": 4}
+  "gyors":   {"min": 1.5, "max": 2.5, "szo_max": 4},
+  "porgos":  {"min": 0.8, "max": 1.6, "szo_max": 3}
  },
  "atfedes": 0.3,
  "elore": 0.06

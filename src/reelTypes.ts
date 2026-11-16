@@ -63,5 +63,6 @@ export type ReelProps = {
   safe?: {fent: number; lent: number; oldal: number}; // 1080 széles vászonra számolt pixel
   logo?: string;      // kis vízjel (public/m/ alatt), opcionális
   hatter?: 'racs' | 'foltok' | 'sima';
+  hangeffekt?: boolean; // whoosh a csíkos váltásoknál, pop a kampónál, ding a CTA-nál
   events: REv[];
 };

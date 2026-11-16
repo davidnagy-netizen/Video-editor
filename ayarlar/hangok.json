@@ -8,6 +8,6 @@
  "el-noi": {"szolgaltato": "elevenlabs", "hang": "EXAVITQu4vr4xnSDxMaL", "modell": "eleven_multilingual_v2", "nyelv": "hu", "stabilitas": 0.45, "hasonlosag": 0.75, "stilus": 0.15, "leiras": "ElevenLabs alap női hang (Sarah). Cseréld magyar anyanyelvű hangra a Voice Library-ből."},
  "david-klon": {"szolgaltato": "elevenlabs", "hang": "CSERELD_KI_DAVID_VOICE_ID", "modell": "eleven_multilingual_v2", "nyelv": "hu", "stabilitas": 0.5, "hasonlosag": 0.8, "stilus": 0.1, "leiras": "David klónozott hangja (ElevenLabs Voice Cloning után add meg az ID-t)"},
  "mate-klon": {"szolgaltato": "elevenlabs", "hang": "CSERELD_KI_MATE_VOICE_ID", "modell": "eleven_multilingual_v2", "nyelv": "hu", "stabilitas": 0.5, "hasonlosag": 0.8, "stilus": 0.1, "leiras": "Máté klónozott hangja"},
- "teszt": {"szolgaltato": "espeak", "hang": "hu", "nyelv": "hu", "leiras": "Helyi robothang, csak a folyamat tesztelésére (nem posztolható)"},
+ "teszt": {"szolgaltato": "espeak", "hang": "mb-hu1", "nyelv": "hu", "leiras": "Helyi robothang, csak a folyamat tesztelésére (nem posztolható)"},
  "teszt-noi": {"szolgaltato": "espeak", "hang": "hu+f3", "nyelv": "hu", "leiras": "Helyi robothang, női változat, csak tesztre"}
 }
